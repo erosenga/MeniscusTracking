@@ -79,16 +79,19 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Emgu.CV">
-      <Version>4.7.0.5276</Version>
+      <Version>4.8.0.5324</Version>
     </PackageReference>
     <PackageReference Include="Emgu.CV.Bitmap">
-      <Version>4.7.0.5276</Version>
+      <Version>4.8.0.5324</Version>
     </PackageReference>
     <PackageReference Include="Emgu.CV.runtime.windows">
-      <Version>4.7.0.5276</Version>
+      <Version>4.8.0.5324</Version>
     </PackageReference>
     <PackageReference Include="Emgu.CV.UI">
-      <Version>4.7.0.5276</Version>
+      <Version>4.8.0.5324</Version>
+    </PackageReference>
+    <PackageReference Include="opencv.win.native">
+      <Version>310.3.0</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

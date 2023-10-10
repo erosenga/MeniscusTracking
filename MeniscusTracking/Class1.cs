@@ -15,67 +15,123 @@ using Emgu.CV.UI;
 using Emgu.Util;
 using static System.Net.Mime.MediaTypeNames;
 
+
 namespace MeniscusTracking
 {
     public class Class1
     {
-        private Mat myErode( Mat src, int val )
+        private Mat myErode(Mat src, int val)
         {
             int erosion_size = val;
             var dest = new Mat();
-            CvInvoke.Erode( src, dest, null, new Point(-1,-1),val, BorderType.Default, CvInvoke.MorphologyDefaultBorderValue );
+            CvInvoke.Erode(src, dest, null, new Point(-1, -1), val, BorderType.Default, CvInvoke.MorphologyDefaultBorderValue);
             return dest;
         }
 
 
-        public int MeniscusTop( string inFileName, int frameStart, int frameEnd )
+        public int MeniscusTop(string inFileName, int frameStart, int frameEnd)
         {
             int frameno;
             int minval = int.MaxValue;
 
-            var capture = new VideoCapture( inFileName );
+            var capture = new VideoCapture(inFileName);
             Mat frame0 = new Mat();
             BackgroundSubtractorMOG2 backSub = new BackgroundSubtractorMOG2();
-            int totFrames = (int)capture.Get( CapProp.FrameCount );
+            int totFrames = (int)capture.Get(CapProp.FrameCount);
             if (frameEnd <= frameStart)
             {
                 frameEnd = totFrames;
             }
 
-            capture.Set( CapProp.PosFrames, frameStart );
+            capture.Set(CapProp.PosFrames, frameStart);
             if (!capture.IsOpened)
             {
-                System.Console.WriteLine( "Unable to open: " + inFileName );
-                System.Environment.Exit( 0 );
+                System.Console.WriteLine("Unable to open: " + inFileName);
+                System.Environment.Exit(0);
             }
             while (true)
             {
-                capture.Read( frame0 );
+                capture.Read(frame0);
                 if (frame0.IsEmpty)
                     break;
-                frameno = (int)capture.Get( CapProp.PosFrames );
+                frameno = (int)capture.Get(CapProp.PosFrames);
                 if (frameno > frameEnd)
                     break;
                 Mat fgMask0 = new Mat();
-                backSub.Apply( frame0, fgMask0 );
-                Rectangle rect = new Rectangle( 10, 2, 100, 20 );
-                CvInvoke.Rectangle( frame0,rect, new MCvScalar( 255, 255, 255 ));
+                backSub.Apply(frame0, fgMask0);
+                Rectangle rect = new Rectangle(10, 2, 100, 20);
+                CvInvoke.Rectangle(frame0, rect, new MCvScalar(255, 255, 255));
                 string label = frameno.ToString();
-                CvInvoke.PutText( frame0, label, new Point( 15, 15 ),
-                            FontFace.HersheySimplex, 0.5, new MCvScalar( 0, 0, 0 ) );
+                CvInvoke.PutText(frame0, label, new Point(15, 15),
+                            FontFace.HersheySimplex, 0.5, new MCvScalar(0, 0, 0));
 
-                CvInvoke.Imshow( "Frame", frame0 );
-                var frame1 = myErode( fgMask0, 2 );
-                CvInvoke.Imshow( "FG Mask", frame1 );      
-                CvInvoke.WaitKey( 30 );
-                var ret = CvInvoke.BoundingRectangle( frame1 );
+                CvInvoke.Imshow("Frame", frame0);
+                var frame1 = myErode(fgMask0, 2);
+                CvInvoke.Imshow("FG Mask", frame1);
+                CvInvoke.WaitKey(30);
+                var ret = CvInvoke.BoundingRectangle(frame1);
                 if (ret.Top != 0)
                 {
-                    minval = Math.Min( minval, ret.Top );
-                    System.Console.WriteLine( frameno.ToString("G") +" "+ret.Top.ToString("G") );
+                    minval = Math.Min(minval, ret.Top);
+                    System.Console.WriteLine(frameno.ToString("G") + " " + ret.Top.ToString("G"));
                 }
             }
             return minval;
+        }
+
+        public double MeniscusFrom2Img()
+        {
+            double delta = int.MaxValue;
+            string InFolder = "C:\\ProgramData\\LabScript\\Videos\\FluidDetection";
+            string Image1Name = "Before";
+            string Image2Name = "After";
+            Image<Rgb, Byte> img1;
+            Image<Rgb, Byte> img2;
+
+
+            try
+            {
+                string im1 = InFolder + "\\" + Image1Name + ".bmp";
+                string im2 = InFolder + "\\" + Image2Name + ".bmp";
+
+                System.Console.WriteLine("Reading " + im1);
+                img1 = new Image<Rgb, Byte>(im1);// path can be absolute or relative.
+                System.Console.WriteLine("Reading " + im2);
+                img2 = new Image<Rgb, Byte>(im2);// path can be absolute or relative.
+                CvInvoke.Imshow("Before", img1);
+                CvInvoke.Imshow("After", img2);
+                CvInvoke.WaitKey(30);
+            }
+            catch (Exception ex)
+            {
+                System.Console.WriteLine("Error in reading file:" + ex.Message);
+                return Double.NaN;
+            }
+            Mat frame0 = new Mat();
+            BackgroundSubtractorMOG2 backSub = new BackgroundSubtractorMOG2();
+
+            backSub.Apply(img1, img2);
+            Rectangle rect = new Rectangle(10, 2, 100, 20);
+            CvInvoke.Rectangle(img1, rect, new MCvScalar(255, 255, 255));
+            CvInvoke.Imshow("Frame", img1);
+            CvInvoke.WaitKey(30);
+            var frame1 = myErode(img1.Mat, 2);
+            var ret = CvInvoke.BoundingRectangle(frame1);
+            if (ret.Top != 0)
+            {
+                delta = Math.Min(delta, ret.Top - ret.Bottom);
+                System.Console.WriteLine(ret.Top.ToString("G") + ret.Bottom.ToString("G") + delta.ToString("G"));
+            }
+            DateTime now = DateTime.Now;
+            try {
+                System.IO.File.Move(InFolder + "\\" + Image1Name, InFolder + "\\" + "\\Archive" + "\\" + Image1Name + now+ ".bmp");
+                System.IO.File.Move(InFolder + "\\" + Image2Name, InFolder + "\\" + "\\Archive" + "\\" + Image2Name + now+ ".bmp");
+            }
+            catch (Exception ex)
+            {
+                System.Console.WriteLine("Error in moving files:"+ex.Message);
+            }
+            return delta;
         }
     }
 

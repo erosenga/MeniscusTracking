@@ -5,6 +5,8 @@ VisualStudioVersion = 17.6.33723.286
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeniscusTracking", "MeniscusTracking\MeniscusTracking.csproj", "{D98BF0BB-DA41-4FE9-9E4F-AC1625BD1B70}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MeniscusTest", "..\MeniscusTest\MeniscusTest\MeniscusTest.csproj", "{B06218C0-58AB-461D-9285-21203DAD2D58}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,14 @@ Global
 		{D98BF0BB-DA41-4FE9-9E4F-AC1625BD1B70}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D98BF0BB-DA41-4FE9-9E4F-AC1625BD1B70}.Release|x64.ActiveCfg = Release|x64
 		{D98BF0BB-DA41-4FE9-9E4F-AC1625BD1B70}.Release|x64.Build.0 = Release|x64
+		{B06218C0-58AB-461D-9285-21203DAD2D58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B06218C0-58AB-461D-9285-21203DAD2D58}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B06218C0-58AB-461D-9285-21203DAD2D58}.Debug|x64.ActiveCfg = Debug|x64
+		{B06218C0-58AB-461D-9285-21203DAD2D58}.Debug|x64.Build.0 = Debug|x64
+		{B06218C0-58AB-461D-9285-21203DAD2D58}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B06218C0-58AB-461D-9285-21203DAD2D58}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B06218C0-58AB-461D-9285-21203DAD2D58}.Release|x64.ActiveCfg = Release|x64
+		{B06218C0-58AB-461D-9285-21203DAD2D58}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
